@@ -1,0 +1,52 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "description": "PrefectHQ org baseline. Every repo extends this. Managers auto-detected; archetype presets (:python, :terraform, :go, :node, :helm, :flux) add grouping/scoping on top.",
+  "extends": [
+    "config:recommended",
+    ":dependencyDashboard"
+  ],
+  "dependencyDashboardTitle": "Renovate Dependency Dashboard",
+  "timezone": "America/New_York",
+  "labels": [
+    "automated-dependency-updates",
+    "renovate"
+  ],
+  "commitMessagePrefix": "chore(deps):",
+  "prConcurrentLimit": 0,
+  "prHourlyLimit": 0,
+  "separateMinorPatch": false,
+  "separateMultipleMajor": true,
+  "packageRules": [
+    {
+      "description": "Batch all minor/patch bumps into a single PR (mirrors the old updatecli manifest-minor run). More specific archetype groups carve their deps out of this batch.",
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
+      "groupName": "minor/patch updates"
+    },
+    {
+      "description": "Keep each major bump as its own PR and label it (mirrors the old manifest-major split). Majors are the riskiest updates and deserve isolated review.",
+      "matchUpdateTypes": [
+        "major"
+      ],
+      "addLabels": [
+        "major-update"
+      ]
+    },
+    {
+      "description": "Group GitHub Actions bumps into their own PR, separate from the general minor/patch batch. Universal: every repo has workflows.",
+      "matchManagers": [
+        "github-actions"
+      ],
+      "groupName": "github actions"
+    },
+    {
+      "description": "Group mise tool bumps into their own PR, separate from the general minor/patch batch. Universal: every repo uses .mise.toml.",
+      "matchManagers": [
+        "mise"
+      ],
+      "groupName": "mise tools"
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "description": "Flux/Kubernetes archetype (cluster-deployment and similar GitOps repos). Scopes the flux + kubernetes managers to workload manifests, groups OpenTelemetry, and suppresses kubernetes-api deprecation noise.",
+  "flux": {
+    "managerFilePatterns": [
+      "/(^|/)(apps|common)/.+\\.ya?ml$/"
+    ]
+  },
+  "kubernetes": {
+    "managerFilePatterns": [
+      "/(^|/)(apps|common)/.+\\.ya?ml$/"
+    ]
+  },
+  "packageRules": [
+    {
+      "description": "Disable Kubernetes apiVersion deprecation tracking. Scoping the kubernetes manager to apps/ and common/ makes it emit a kubernetes-api dep per resource kind; updatecli never watched these and they only add dashboard noise. We only want container images from this manager.",
+      "matchDatasources": [
+        "kubernetes-api"
+      ],
+      "enabled": false
+    },
+    {
+      "description": "Group OpenTelemetry components together (collector + operator move in lockstep), separate from the general minor/patch batch.",
+      "matchPackageNames": [
+        "/opentelemetry/",
+        "/otel/"
+      ],
+      "groupName": "opentelemetry"
+    }
+  ]
+}

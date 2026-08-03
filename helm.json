@@ -1,0 +1,17 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "description": "Helm archetype (prefect-helm subcharts, prefect-operator, customer-managed, nebula chart). Groups helmv3 chart-dependency bumps.",
+  "packageRules": [
+    {
+      "description": "Group Helm chart-dependency (subchart) bumps into a single PR.",
+      "matchManagers": [
+        "helmv3"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
+      "groupName": "helm charts"
+    }
+  ]
+}
