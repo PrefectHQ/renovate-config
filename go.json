@@ -1,0 +1,18 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "description": "Go archetype (prefect-operator). Groups gomod minor/patch; majors stay split (baseline). Digest updates for indirect deps are batched with the go group.",
+  "packageRules": [
+    {
+      "description": "Group Go module minor/patch bumps into a single PR.",
+      "matchManagers": [
+        "gomod"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch",
+        "digest"
+      ],
+      "groupName": "go modules"
+    }
+  ]
+}

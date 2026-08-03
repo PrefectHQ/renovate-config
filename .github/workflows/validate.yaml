@@ -1,0 +1,37 @@
+---
+name: Validate presets
+
+# Validate every preset against the Renovate config schema on PRs and pushes to
+# main. Pinned to the same Renovate major the org runs (github-action@v46.2.0
+# bundles renovate 41.x), so validation matches what resolves these presets at
+# runtime. The npm `renovate` dist-tag lags several majors and its validator
+# silently accepts newer options (e.g. managerFilePatterns) as unknown, so pin
+# the version explicitly rather than using `npx renovate` bare.
+
+"on":
+  pull_request:
+    paths:
+      - "*.json"
+      - ".github/workflows/validate.yaml"
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Validate config presets
+        run: |
+          npx --yes --package renovate@41.173.1 -- \
+            renovate-config-validator --strict \
+            default.json flux.json python.json terraform.json go.json node.json helm.json
