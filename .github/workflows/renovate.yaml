@@ -6,11 +6,21 @@ name: Renovate
 # renovate.json are touched: ONBOARDING=false + REQUIRE_CONFIG=required make
 # Renovate skip repos without config, so a repo is picked up automatically once
 # its renovate.json is present.
+#
+# Manual runs accept an optional `repository` input to target a single repo
+# instead of autodiscovering the whole installation -- useful for testing a
+# freshly-merged renovate.json without waiting for the weekly schedule. Accepts
+# a bare name (e.g. nebula) or owner/name (e.g. PrefectHQ/nebula).
 
 "on":
   schedule:
     - cron: 0 15 * * 1
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      repository:
+        description: "Optional: run against a single repo only (bare name or owner/name). Leave blank to autodiscover the whole installation."
+        required: false
+        type: string
 
 concurrency:
   group: ${{ github.workflow }}
@@ -31,13 +41,34 @@ jobs:
           private-key: ${{ secrets.PREFECT_RENOVATE_PRIVATE_KEY }}
           owner: PrefectHQ
 
+      - name: Resolve run scope
+        id: scope
+        env:
+          INPUT_REPO: ${{ inputs.repository }}
+        run: |
+          if [ -n "$INPUT_REPO" ]; then
+            # Normalize a bare name to owner/name.
+            case "$INPUT_REPO" in
+              */*) repo="$INPUT_REPO" ;;
+              *)   repo="PrefectHQ/$INPUT_REPO" ;;
+            esac
+            echo "autodiscover=false" >> "$GITHUB_OUTPUT"
+            echo "repositories=$repo" >> "$GITHUB_OUTPUT"
+            echo "Targeting a single repository: $repo"
+          else
+            echo "autodiscover=true" >> "$GITHUB_OUTPUT"
+            echo "repositories=" >> "$GITHUB_OUTPUT"
+            echo "Autodiscovering the whole installation"
+          fi
+
       - name: Checkout
         uses: actions/checkout@v7
 
       - name: Run Renovate
         uses: renovatebot/github-action@v46.2.0
         env:
-          RENOVATE_AUTODISCOVER: "true"
+          RENOVATE_AUTODISCOVER: ${{ steps.scope.outputs.autodiscover }}
+          RENOVATE_REPOSITORIES: ${{ steps.scope.outputs.repositories }}
           RENOVATE_ONBOARDING: "false"
           RENOVATE_REQUIRE_CONFIG: "required"
           LOG_LEVEL: debug
