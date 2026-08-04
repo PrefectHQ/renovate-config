@@ -33,14 +33,6 @@
       "minimumReleaseAge": "7 days"
     },
     {
-      "description": "Batch all minor/patch bumps into a single PR. More specific archetype groups carve their deps out of this batch.",
-      "matchUpdateTypes": [
-        "minor",
-        "patch"
-      ],
-      "groupName": "minor/patch updates"
-    },
-    {
       "description": "Keep each major bump as its own PR and label it. Majors are the riskiest updates and deserve isolated review.",
       "matchUpdateTypes": [
         "major"
@@ -50,14 +42,83 @@
       ]
     },
     {
-      "description": "Group GitHub Actions bumps into their own PR, separate from the general minor/patch batch. Universal: every repo has workflows.",
+      "description": "Group minor/patch bumps per ecosystem so each PR is one coherent, reviewable unit and a failure in one ecosystem does not block another. Majors are excluded (they split out per the rule above). Archetype presets add finer sub-groups on top.",
+      "matchManagers": [
+        "npm"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
+      "groupName": "npm dependencies"
+    },
+    {
+      "description": "Group Go module minor/patch bumps into one PR.",
+      "matchManagers": [
+        "gomod"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
+      "groupName": "go modules"
+    },
+    {
+      "description": "Group Python minor/patch bumps (pep621/uv, pip-tools, plain pip) into one PR.",
+      "matchManagers": [
+        "pep621",
+        "pip_requirements",
+        "pip-compile"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
+      "groupName": "python dependencies"
+    },
+    {
+      "description": "Group container image minor/patch bumps (Dockerfiles and docker-compose) into one PR.",
+      "matchManagers": [
+        "dockerfile",
+        "docker-compose"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
+      "groupName": "docker images"
+    },
+    {
+      "description": "Group Terraform provider/module minor/patch bumps into one PR.",
+      "matchManagers": [
+        "terraform"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
+      "groupName": "terraform"
+    },
+    {
+      "description": "Group Helm chart-dependency minor/patch bumps into one PR.",
+      "matchManagers": [
+        "helmv3"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
+      "groupName": "helm charts"
+    },
+    {
+      "description": "Group GitHub Actions bumps into their own PR. Universal: every repo has workflows.",
       "matchManagers": [
         "github-actions"
       ],
       "groupName": "github actions"
     },
     {
-      "description": "Group mise tool bumps into their own PR, separate from the general minor/patch batch. Universal: every repo uses .mise.toml.",
+      "description": "Group mise tool bumps into their own PR. Universal: every repo uses .mise.toml.",
       "matchManagers": [
         "mise"
       ],
