@@ -18,6 +18,21 @@
   "separateMultipleMajor": true,
   "packageRules": [
     {
+      "description": "Supply-chain day-0 cooldown: wait 7 days before bumping npm and PyPI packages (easy to publish; run install/build hooks -- the main day-0 attack surface) and GitHub Actions (run in CI with secrets). Terraform providers, docker images, and go modules are left on immediate updates -- lower day-0 risk and we do not want to delay their security patches.",
+      "matchDatasources": [
+        "npm",
+        "pypi"
+      ],
+      "minimumReleaseAge": "7 days"
+    },
+    {
+      "description": "Supply-chain day-0 cooldown for GitHub Actions (see the npm/pypi rule above).",
+      "matchManagers": [
+        "github-actions"
+      ],
+      "minimumReleaseAge": "7 days"
+    },
+    {
       "description": "Batch all minor/patch bumps into a single PR (mirrors the old updatecli manifest-minor run). More specific archetype groups carve their deps out of this batch.",
       "matchUpdateTypes": [
         "minor",
