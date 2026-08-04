@@ -33,7 +33,7 @@
       "minimumReleaseAge": "7 days"
     },
     {
-      "description": "Batch all minor/patch bumps into a single PR (mirrors the old updatecli manifest-minor run). More specific archetype groups carve their deps out of this batch.",
+      "description": "Batch all minor/patch bumps into a single PR. More specific archetype groups carve their deps out of this batch.",
       "matchUpdateTypes": [
         "minor",
         "patch"
@@ -41,7 +41,7 @@
       "groupName": "minor/patch updates"
     },
     {
-      "description": "Keep each major bump as its own PR and label it (mirrors the old manifest-major split). Majors are the riskiest updates and deserve isolated review.",
+      "description": "Keep each major bump as its own PR and label it. Majors are the riskiest updates and deserve isolated review.",
       "matchUpdateTypes": [
         "major"
       ],

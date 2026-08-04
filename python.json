@@ -1,6 +1,6 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "description": "Python archetype. Covers uv/pep621 pyproject repos (nebula), pip-tools/requirements (customer-managed), and plain pip across subdirs (flows). uv is handled by the pep621 + pip-compile managers (there is no separate 'uv' manager). Managers auto-detected; this preset only groups.",
+  "description": "Python archetype. Covers uv/pep621 pyproject repos, pip-tools/requirements repos, and plain pip across subdirs. uv is handled by the pep621 + pip-compile managers (there is no separate 'uv' manager). Managers auto-detected; this preset only groups.",
   "packageRules": [
     {
       "description": "Group dev-tooling (linters/formatters/type-checkers) separately from runtime deps. Repos that pin these manually can disable via matchDepNames in their own renovate.json.",

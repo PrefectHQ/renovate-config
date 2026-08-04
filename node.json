@@ -1,6 +1,6 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "description": "Node/Vue/TS archetype (nebula-ui, horizon, vue-charts, eslint-config, fastmcp). Groups npm/pnpm deps and carves type definitions out.",
+  "description": "Node/Vue/TS archetype. Groups npm/pnpm deps and carves type definitions out.",
   "packageRules": [
     {
       "description": "Group @types/* definition bumps together; they are low-risk and noisy.",
