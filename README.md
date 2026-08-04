@@ -23,7 +23,7 @@ Presets float (no `#vX.Y.Z` ref), so changes here propagate to all repos on thei
 
 | Preset | Extends string | For |
 |--------|----------------|-----|
-| baseline | `github>PrefectHQ/renovate-config` | every repo (labels, commit prefix, minor/patch batch, major split, github-actions + mise groups, dependency dashboard) |
+| baseline | `github>PrefectHQ/renovate-config` | every repo (labels, commit prefix, minor/patch batch, major split, github-actions + mise groups, dependency dashboard, 7-day `minimumReleaseAge` on npm/PyPI/Actions) |
 | `:flux` | `github>PrefectHQ/renovate-config:flux` | GitOps repos (cluster-deployment): flux/kubernetes scoping, otel group, kubernetes-api noise off |
 | `:python` | `github>PrefectHQ/renovate-config:python` | uv / pip-tools / pip repos (nebula, flows, customer-managed) |
 | `:terraform` | `github>PrefectHQ/renovate-config:terraform` | HCL repos (platform, terraform-provider-prefect) |
