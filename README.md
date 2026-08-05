@@ -19,6 +19,8 @@ Add a `renovate.json` to the repo root:
 
 Presets float (no `#vX.Y.Z` ref), so changes here propagate to all repos on their next Renovate run.
 
+> **Note for PrefectHQ repos:** a `renovate.json` alone is not enough — Renovate runs from a single central runner (`.github/workflows/renovate.yaml` in this repo) that only acts on repos in its App install list. To onboard a repo, add it to that install list as well. Platform-team engineers: see the internal `docs/renovate.md` runbook for both steps.
+
 ## Presets
 
 | Preset | Extends string | For |
