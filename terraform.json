@@ -11,6 +11,13 @@
   },
   "packageRules": [
     {
+      "description": "Widen version constraints on a major bump instead of replacing them. Renovate's default (auto/replace) collapses a compound range like `>= 2.13.5, < 3` to `< 4`, silently dropping the lower bound -- a real regression for published modules where the floor is a compatibility contract. `widen` keeps the floor and extends the ceiling (`>= 2.13.5, < 4`). Major provider bumps still warrant human validation before merge.",
+      "matchManagers": [
+        "terraform"
+      ],
+      "rangeStrategy": "widen"
+    },
+    {
       "description": "Group Terraform provider bumps together.",
       "matchManagers": [
         "terraform"
