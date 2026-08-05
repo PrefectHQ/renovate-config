@@ -76,10 +76,13 @@ jobs:
           RENOVATE_REQUIRE_CONFIG: "required"
           # postUpgradeTasks (defined in the archetype presets) regenerate docs
           # after a bump so each repo's terraform-docs/helm-docs pre-commit check
-          # passes. Self-hosted trusts these commands only if they match the
-          # allow-list below; templating lets a command reference the upgraded
-          # files. The entrypoint installs the two doc binaries into the image.
-          RENOVATE_ALLOWED_COMMANDS: '["terraform-docs --config=.terraform-docs.yaml", "helm-docs "]'
+          # passes. Self-hosted trusts these commands only if they match one of
+          # the allow-list regexes below (matched against the whole command
+          # string); templating lets a command reference the upgraded files. The
+          # entrypoint installs the two doc binaries into the image. The
+          # terraform command is shell-wrapped (Renovate runs commands directly,
+          # so `&&`/`||` need a `bash -c`), so the regex allows that form.
+          RENOVATE_ALLOWED_COMMANDS: '["^bash -c ''test -f \\.terraform-docs\\.yaml && terraform-docs ", "^helm-docs "]'
           RENOVATE_ALLOW_POST_UPGRADE_COMMAND_TEMPLATING: "true"
           LOG_LEVEL: debug
         with:
