@@ -74,15 +74,18 @@ jobs:
           RENOVATE_REPOSITORIES: ${{ steps.scope.outputs.repositories }}
           RENOVATE_ONBOARDING: "false"
           RENOVATE_REQUIRE_CONFIG: "required"
-          # postUpgradeTasks (defined in the archetype presets) regenerate docs
-          # after a bump so each repo's terraform-docs/helm-docs pre-commit check
-          # passes. Self-hosted trusts these commands only if they match one of
-          # the allow-list regexes below (matched against the whole command
-          # string); templating lets a command reference the upgraded files. The
-          # entrypoint installs the two doc binaries into the image. The
-          # terraform command is shell-wrapped (Renovate runs commands directly,
-          # so `&&`/`||` need a `bash -c`), so the regex allows that form.
-          RENOVATE_ALLOWED_COMMANDS: '["^bash -c ''test -f \\.terraform-docs\\.yaml && terraform-docs ", "^helm-docs "]'
+          # postUpgradeTasks (defined in the archetype presets, and per-repo
+          # overrides for outliers like terraform-prefect-ecs-worker) regenerate
+          # docs after a bump so each repo's terraform-docs/helm-docs pre-commit
+          # check passes. Self-hosted trusts these commands only if they match
+          # one of the allow-list regexes below (matched against the whole
+          # command string); templating lets a command reference the upgraded
+          # files. The entrypoint installs the two doc binaries into the image.
+          # The allow-list permits any terraform-docs/helm-docs invocation (both
+          # are pure doc generators) plus the preset's shell-guarded form, so a
+          # repo with a non-standard doc command can override postUpgradeTasks in
+          # its own renovate.json without a central allow-list edit.
+          RENOVATE_ALLOWED_COMMANDS: '["^terraform-docs ", "^helm-docs ", "^bash -c ''test -f \\.terraform-docs\\.yaml && terraform-docs "]'
           RENOVATE_ALLOW_POST_UPGRADE_COMMAND_TEMPLATING: "true"
           LOG_LEVEL: debug
         with:
