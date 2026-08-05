@@ -1,9 +1,8 @@
 # PrefectHQ Renovate config
 
-Shared [Renovate](https://docs.renovatebot.com/) config presets for the org, plus the single central runner that applies them. Each repo extends the org baseline plus one or more archetype presets, and Renovate opens grouped dependency-update PRs against it — no per-repo Renovate workflow required.
+Shared [Renovate](https://docs.renovatebot.com/) config presets for the org, plus the single central runner that applies them. Your repo extends the baseline plus an archetype or two, and Renovate opens grouped dependency-update PRs — no per-repo Renovate workflow to copy around.
 
-- **Using Renovate?** See [Onboard a repo](#onboard-a-repo) below.
-- **Curious how the runner/App/Terraform works under the hood?** That's in the internal [`platform/docs/renovate.md`](https://github.com/PrefectHQ/platform/blob/main/docs/renovate.md) runbook.
+Want to get your repo onto it? Jump to [Onboard a repo](#onboard-a-repo).
 
 ## How it works
 
@@ -25,7 +24,7 @@ A repo is picked up when two things are true: it has a `renovate.json`, and it's
 
 ## Onboard a repo
 
-Two small PRs. You can do both yourself — neither needs special access.
+Two small PRs, both self-serve.
 
 ### 1. Add `renovate.json` to your repo
 
@@ -52,9 +51,9 @@ At the repo root, extend the baseline plus the archetype(s) that match your ecos
 
 Compose freely — a uv repo that also ships a Helm chart extends `[baseline, :python, :helm]`. Managers are auto-detected, so **don't** add an `enabledManagers` allow-list. Only add repo-specific `customManagers` / `packageRules` for something the auto-detected managers miss (e.g. an image tag pinned inline in a YAML file) or to hold a version constraint.
 
-### 2. Add your repo to the install list
+### 2. Add your repo to the runner's install list
 
-Open a one-line PR to [`PrefectHQ/platform` → `github/single-use/org/github-app.tf`](https://github.com/PrefectHQ/platform/blob/main/github/single-use/org/github-app.tf): add your repo to `prefect_renovate_installed_repos` (keep it alphabetical). This is a small, reviewable change — anyone in engineering can open it and get it approved; it doesn't require a platform engineer. On apply, the App installs on your repo and Renovate starts picking it up.
+The runner only touches repos the Renovate GitHub App is installed on, and that list is managed in Terraform in the `platform` repo. Add your repo there in a one-line PR (the list is alphabetical). Once it merges and applies, the App picks your repo up. Not sure where that lives? Ask in `#eng-team` and someone will point you at it — or just open a PR for step 1 and we'll wire up the install.
 
 ### 3. Retire the old tooling
 
@@ -109,8 +108,8 @@ The baseline waits **7 days** (`minimumReleaseAge`) before opening PRs for npm, 
 |---|---|
 | No PRs and no dashboard on a repo | It has no `renovate.json`, or it's not on the install list. Both are required — see [Onboard a repo](#onboard-a-repo). |
 | `GET /repos/*/dependabot/alerts` → 403 in the run log | Expected and harmless. The App deliberately lacks "Dependabot alerts" access (that preserves the 7-day cooldown). |
-| `integration-unauthorized` abort on a repo | The App token can't reach something — often a github-actions dep pointing at an internal repo the App isn't installed on. Disable that dep with a `packageRule`. |
-| A run touched a repo you didn't expect | Autodiscover runs the whole install list. Remove the repo from `prefect_renovate_installed_repos` to stop it. |
+| `integration-unauthorized` abort on a repo | The App token can't reach something — often a github-actions dep that points at a repo the App isn't installed on. Disable that dep with a `packageRule`. |
+| A run touched a repo you didn't expect | Autodiscover runs the whole install list. Drop the repo from the install list to stop it. |
 | A preset change didn't take effect | Presets float, so changes apply on a repo's next run. Trigger a manual run (step 4 above) to apply immediately. |
 
 Need a hand, or not sure which archetype fits? Ask in `#eng-team`.
