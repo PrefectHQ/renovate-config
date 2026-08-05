@@ -64,6 +64,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
 
+      - name: Make container entrypoint executable
+        run: chmod +x .github/renovate-entrypoint.sh
+
       - name: Run Renovate
         uses: renovatebot/github-action@v46.2.0
         env:
@@ -71,6 +74,14 @@ jobs:
           RENOVATE_REPOSITORIES: ${{ steps.scope.outputs.repositories }}
           RENOVATE_ONBOARDING: "false"
           RENOVATE_REQUIRE_CONFIG: "required"
+          # postUpgradeTasks (defined in the archetype presets) regenerate docs
+          # after a bump so each repo's terraform-docs/helm-docs pre-commit check
+          # passes. Self-hosted trusts these commands only if they match the
+          # allow-list below; templating lets a command reference the upgraded
+          # files. The entrypoint installs the two doc binaries into the image.
+          RENOVATE_ALLOWED_COMMANDS: '["terraform-docs --config=.terraform-docs.yaml", "helm-docs "]'
+          RENOVATE_ALLOW_POST_UPGRADE_COMMAND_TEMPLATING: "true"
           LOG_LEVEL: debug
         with:
           token: ${{ steps.app_token.outputs.token }}
+          docker-cmd-file: .github/renovate-entrypoint.sh
