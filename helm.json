@@ -1,6 +1,14 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "description": "Helm archetype for repos with Helm subcharts. Groups helmv3 chart-dependency bumps.",
+  "postUpgradeTasks": {
+    "description": "Regenerate helm-docs chart READMEs after a bump so the helm-docs pre-commit check does not fail in CI. The runner's RENOVATE_ALLOWED_COMMANDS must permit helm-docs; the entrypoint installs the binary. prefect-helm renders README.md from README.md.gotmpl.",
+    "commands": [
+      "helm-docs --template-files=README.md.gotmpl"
+    ],
+    "fileFilters": ["**/README.md"],
+    "executionMode": "branch"
+  },
   "packageRules": [
     {
       "description": "Group Helm chart-dependency (subchart) bumps into a single PR.",
