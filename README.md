@@ -55,14 +55,9 @@ Compose freely — a uv repo that also ships a Helm chart extends `[baseline, :p
 
 The runner only touches repos the Renovate GitHub App is installed on, and that list is managed in Terraform in the `platform` repo. Add your repo there in a one-line PR (the list is alphabetical). Once it merges and applies, the App picks your repo up. Not sure where that lives? Ask in `#eng-team` and someone will point you at it — or just open a PR for step 1 and we'll wire up the install.
 
-### 3. Retire the old tooling
+### 3. Retire Dependabot
 
-Renovate replaces the previous per-repo update mechanisms. Remove what it now covers:
-
-- **Dependabot version updates** — delete `.github/dependabot.yml` (check parity first: every ecosystem it watched should have a Renovate manager). Dependabot **security alerts** are a separate repo-level setting — leave them on; deleting the config file doesn't disable them.
-- **updatecli** — if `.github/updatecli/` manifests + workflows are now covered by Renovate, remove them. Where updatecli did something Renovate doesn't (e.g. bumping a version constant in source), add a `customManager` first, then remove updatecli.
-- **mise-tool update workflow** — if a workflow only bumps `.mise.toml` (e.g. `update-mise-tools.yaml`), delete it; Renovate's `mise` manager handles it.
-- **Dangling notify references** — if a `notify-on-failure.yaml` watches a workflow you just removed (a `- <Workflow Name>` entry under `workflow_run`), strip that entry too.
+Renovate takes over the routine version bumps, so delete your `.github/dependabot.yml` (or `.yaml`) — check first that every ecosystem it watched has a Renovate manager. Dependabot **security alerts** are a separate repo-level setting; leave those on, deleting the config file doesn't touch them.
 
 ### 4. Verify
 
