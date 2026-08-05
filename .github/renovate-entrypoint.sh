@@ -25,7 +25,7 @@
 set -euo pipefail
 
 TERRAFORM_DOCS_VERSION="0.24.0"
-HELM_DOCS_VERSION="1.11.0"
+HELM_DOCS_VERSION="1.14.2"
 BIN_DIR="/usr/local/bin"
 
 arch="$(uname -m)"
