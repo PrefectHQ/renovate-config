@@ -2,9 +2,9 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "description": "Terraform archetype (platform, terraform-provider-prefect). Groups provider and module bumps separately.",
   "postUpgradeTasks": {
-    "description": "Regenerate terraform-docs module READMEs after a bump so the terraform-docs pre-commit check does not fail in CI. Guarded on .terraform-docs.yaml so repos without that hook (e.g. platform, terraform-provider-prefect which generate docs differently) no-op. The runner's RENOVATE_ALLOWED_COMMANDS must permit terraform-docs; the entrypoint installs the binary.",
+    "description": "Regenerate terraform-docs module READMEs after a bump so the terraform-docs pre-commit check does not fail in CI. Guarded on .terraform-docs.yaml so repos without that hook (e.g. platform, terraform-provider-prefect which generate docs differently) no-op. Renovate runs commands directly (no shell), so shell operators like && must be wrapped in `bash -c`. The runner's RENOVATE_ALLOWED_COMMANDS must permit terraform-docs; the entrypoint installs the binary.",
     "commands": [
-      "test -f .terraform-docs.yaml && terraform-docs --config=.terraform-docs.yaml . || true"
+      "bash -c 'test -f .terraform-docs.yaml && terraform-docs --config=.terraform-docs.yaml . || true'"
     ],
     "fileFilters": ["**/README.md"],
     "executionMode": "branch"
