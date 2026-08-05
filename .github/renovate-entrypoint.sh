@@ -15,11 +15,16 @@
 #   * terraform-docs -- regenerates module README tables on provider/version bumps
 #   * helm-docs       -- regenerates chart README from values.yaml/Chart.yaml bumps
 #
-# Versions pinned to match the repos' pre-commit hook revs so generated output
-# is byte-identical to what CI expects (terraform-docs v0.20.0, helm-docs v1.11.0).
+# Versions pinned to match what CI actually runs, so generated output is
+# byte-identical. The terraform repos use the `terraform-docs-system` hook,
+# which ignores the pre-commit `rev:` and runs whatever terraform-docs is on
+# PATH -- in CI that is the mise-pinned version (.mise.toml: 0.24.0 across
+# bucket-sensor/aci-worker/ecs-worker). A newer terraform-docs pads table
+# separators (`| ---- |` vs `|------|`), so a version mismatch fails CI even
+# when the content is identical. helm-docs pinned to prefect-helm's hook rev.
 set -euo pipefail
 
-TERRAFORM_DOCS_VERSION="0.20.0"
+TERRAFORM_DOCS_VERSION="0.24.0"
 HELM_DOCS_VERSION="1.11.0"
 BIN_DIR="/usr/local/bin"
 

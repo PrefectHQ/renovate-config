@@ -1,0 +1,34 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "github>PrefectHQ/renovate-config"
+  ],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "terraform-docs version installed into the Renovate runner by the container entrypoint. Kept in sync with the terraform repos' mise-pinned terraform-docs so postUpgradeTasks generate CI-identical docs. Tags are vX.Y.Z; the var holds X.Y.Z, so extractVersion strips the v.",
+      "managerFilePatterns": [
+        "/^\\.github/renovate-entrypoint\\.sh$/"
+      ],
+      "matchStrings": [
+        "TERRAFORM_DOCS_VERSION=\"(?<currentValue>\\d+\\.\\d+\\.\\d+)\""
+      ],
+      "depNameTemplate": "terraform-docs/terraform-docs",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+)$"
+    },
+    {
+      "customType": "regex",
+      "description": "helm-docs version installed into the Renovate runner by the container entrypoint. Kept in sync with prefect-helm's helm-docs pre-commit hook. Tags are vX.Y.Z; the var holds X.Y.Z, so extractVersion strips the v.",
+      "managerFilePatterns": [
+        "/^\\.github/renovate-entrypoint\\.sh$/"
+      ],
+      "matchStrings": [
+        "HELM_DOCS_VERSION=\"(?<currentValue>\\d+\\.\\d+\\.\\d+)\""
+      ],
+      "depNameTemplate": "norwoodj/helm-docs",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+)$"
+    }
+  ]
+}
