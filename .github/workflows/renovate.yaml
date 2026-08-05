@@ -84,4 +84,9 @@ jobs:
           LOG_LEVEL: debug
         with:
           token: ${{ steps.app_token.outputs.token }}
+          # The entrypoint installs tools into /usr/local/bin (needs root) and
+          # then drops to the image's `ubuntu` user to run renovate. Because
+          # docker-cmd-file replaces the container command, the script -- not the
+          # action -- is responsible for invoking renovate at its end.
           docker-cmd-file: .github/renovate-entrypoint.sh
+          docker-user: root

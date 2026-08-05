@@ -1,31 +1,27 @@
 #!/bin/bash
 # Container bootstrap for the self-hosted Renovate runner.
 #
-# Runs inside the Renovate Docker image (via the action's `docker-cmd-file`)
-# BEFORE `renovate` starts, so the binaries it installs are on PATH when
-# postUpgradeTasks commands execute. Renovate itself never bundles these.
+# Passed to renovatebot/github-action as `docker-cmd-file`, which REPLACES the
+# container's default `renovate` command. So this script must (1) install the
+# extra tooling and (2) hand off to renovate itself at the end -- otherwise the
+# container exits after the install and Renovate never runs.
 #
-# We install the doc generators that Renovate version bumps would otherwise
-# leave stale, causing each repo's terraform-docs/helm-docs pre-commit check to
-# fail in CI:
+# Runs as root (docker-user: root in the workflow) so it can install into
+# /usr/local/bin, then drops to the image's `ubuntu` user to run renovate.
+#
+# The tools it installs are the doc generators that Renovate version bumps would
+# otherwise leave stale, causing each repo's terraform-docs/helm-docs pre-commit
+# check to fail in CI:
 #   * terraform-docs -- regenerates module README tables on provider/version bumps
 #   * helm-docs       -- regenerates chart README from values.yaml/Chart.yaml bumps
 #
-# Pin versions to match the repos' pre-commit hook revs so generated output is
-# byte-identical to what CI expects (terraform-docs v0.20.0, helm-docs v1.11.0).
+# Versions pinned to match the repos' pre-commit hook revs so generated output
+# is byte-identical to what CI expects (terraform-docs v0.20.0, helm-docs v1.11.0).
 set -euo pipefail
 
 TERRAFORM_DOCS_VERSION="0.20.0"
 HELM_DOCS_VERSION="1.11.0"
-
-# The Renovate image runs as a non-root user; install into a user-writable dir
-# already on PATH inside the container.
 BIN_DIR="/usr/local/bin"
-if [ ! -w "$BIN_DIR" ]; then
-  BIN_DIR="${HOME}/.local/bin"
-  mkdir -p "$BIN_DIR"
-  export PATH="${BIN_DIR}:${PATH}"
-fi
 
 arch="$(uname -m)"
 case "$arch" in
@@ -58,3 +54,7 @@ install -m 0755 "${tmp}/helm-docs" "${BIN_DIR}/helm-docs"
 
 echo "terraform-docs: $(command -v terraform-docs) -> $(terraform-docs --version)"
 echo "helm-docs:      $(command -v helm-docs) -> $(helm-docs --version)"
+
+# Hand off to Renovate as the non-root image user. `docker-cmd-file` replaces
+# the default command, so this line is what actually runs Renovate.
+exec runuser -u ubuntu renovate
