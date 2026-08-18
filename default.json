@@ -111,10 +111,11 @@
       "groupName": "helm charts"
     },
     {
-      "description": "Group GitHub Actions bumps into their own PR. Universal: every repo has workflows.",
+      "description": "Group GitHub Actions bumps into their own PR. Universal: every repo has workflows. separateMultipleMajor is disabled here so multiple available majors of an action collapse into this one PR rather than splitting a PR per major.",
       "matchManagers": [
         "github-actions"
       ],
+      "separateMultipleMajor": false,
       "groupName": "github actions"
     },
     {
