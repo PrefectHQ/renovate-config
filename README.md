@@ -87,6 +87,10 @@ Presets float (no `#vX.Y.Z` ref), so changes here propagate to all repos on thei
 
 Minor/patch bumps are grouped **per ecosystem** — one PR each for npm, gomod, python, docker, terraform, helm — plus separate groups for GitHub Actions and mise tools. **Major** bumps are always their own PR, labeled `major-update`. Archetypes layer finer sub-groups on top (e.g. `:python` splits dev tooling out).
 
+### Automerge
+
+mise tool bumps at **minor/patch** automerge once CI passes, so routine tool updates don't need a review. They use GitHub native auto-merge (`platformAutomerge`), so branch protection still applies and a PR that fails checks stays open. mise **majors** are excluded and still get reviewed: a mise major changes the toolchain every other CI job runs on. Nothing else automerges.
+
 ### Supply-chain cooldown
 
 The baseline waits **7 days** (`minimumReleaseAge`) before opening PRs for npm, PyPI, and GitHub Actions bumps — a package must be published for a week first, to avoid day-0 supply-chain attacks. CVE **alerting** is still handled by Dependabot's (separate) security alerts, so this cooldown doesn't delay awareness of vulnerabilities.
