@@ -124,6 +124,18 @@
         "mise"
       ],
       "groupName": "mise tools"
+    },
+    {
+      "description": "Automerge mise minor/patch bumps once CI passes, so routine tool updates do not need a review. Majors are excluded: a mise major changes the toolchain every other CI job runs on, so those still open a PR for a human. platformAutomerge hands the merge to GitHub native auto-merge, which respects branch protection and merges as soon as checks go green rather than on the next Renovate run.",
+      "matchManagers": [
+        "mise"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
+      "automerge": true,
+      "platformAutomerge": true
     }
   ]
 }
