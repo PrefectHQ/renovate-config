@@ -24,7 +24,7 @@
 # when the content is identical. helm-docs pinned to prefect-helm's hook rev.
 set -euo pipefail
 
-TERRAFORM_DOCS_VERSION="0.24.0"
+TERRAFORM_DOCS_VERSION="0.25.1"
 HELM_DOCS_VERSION="1.14.2"
 BIN_DIR="/usr/local/bin"
 
