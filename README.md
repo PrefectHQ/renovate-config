@@ -85,7 +85,7 @@ Presets float (no `#vX.Y.Z` ref), so changes here propagate to all repos on thei
 
 ### How PRs are grouped
 
-Minor/patch bumps are grouped **per ecosystem** — one PR each for npm, gomod, python, docker, terraform, helm — plus separate groups for GitHub Actions and mise tools. **Major** bumps are always their own PR, labeled `major-update`. Archetypes layer finer sub-groups on top (e.g. `:python` splits dev tooling out).
+Minor/patch bumps are grouped **per ecosystem** — one PR each for npm, gomod, cargo, python, docker, terraform, helm — plus separate groups for GitHub Actions and mise tools. **Major** bumps are always their own PR, labeled `major-update`. Archetypes layer finer sub-groups on top (e.g. `:python` splits dev tooling out).
 
 ### Supply-chain cooldown
 
