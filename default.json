@@ -64,6 +64,17 @@
       "groupName": "go modules"
     },
     {
+      "description": "Group Rust crate minor/patch bumps (Cargo.toml and Cargo.lock) into one PR.",
+      "matchManagers": [
+        "cargo"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
+      "groupName": "rust crates"
+    },
+    {
       "description": "Group Python minor/patch bumps (pep621/uv, pip-tools, plain pip) into one PR.",
       "matchManagers": [
         "pep621",
